@@ -11,5 +11,8 @@
     "url": "git+https://github.com/senecaSparsh/fragmants.git"
   },
   "author": "Sparsh Agarwal",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "3.0.3"
+  }
 }
