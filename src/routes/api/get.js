@@ -2,15 +2,20 @@
 const { createSuccessResponse, createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model/fragment');
 const { readFragmentData } = require('../../model/data');
+
+require('dotenv').config();
 /**
  * Get a list of fragments for the current user
  */
 module.exports = async (req, res) => {
   let fragment;
+  const api = process.env.API_URL;
+
   if (req.user) {
     if (req.query) {
       if (req.params.id) {
         console.log(req.params);
+        res.location(`${api}/${req.params.id}`);
         fragment = await readFragmentData(req.user, req.params.id);
         res.status(200).json(createSuccessResponse({ fragments: fragment.toString() }));
       } else {

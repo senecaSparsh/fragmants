@@ -60,7 +60,7 @@ class Fragment {
     // TODO
     try {
       const fragments = await listFragments(ownerId, expand);
-      return fragments;
+      return expand ? fragments.map((fragment) => new Fragment(fragment)) : fragments;
     } catch (err) {
       return [];
     }
@@ -75,8 +75,7 @@ class Fragment {
   static async byId(ownerId, id) {
     // TODO
     if ((await this.byUser(ownerId)).includes(id)) {
-      const fragments = await readFragment(ownerId, id);
-      return fragments;
+      return new Fragment(await readFragment(ownerId, id));
     } else {
       throw new Error('no such fragment');
     }
@@ -109,7 +108,17 @@ class Fragment {
    */
   getData() {
     // TODO
-    return readFragmentData(this.ownerId, this.id);
+    try {
+      return new Promise((resolve, reject) => {
+        readFragmentData(this.ownerId, this.id)
+          .then((data) => resolve(Buffer.from(data)))
+          .catch(() => {
+            reject(new Error());
+          });
+      });
+    } catch (err) {
+      throw new Error(`false`);
+    }
   }
 
   /**
