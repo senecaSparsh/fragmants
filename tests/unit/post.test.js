@@ -1,7 +1,6 @@
 // tests/unit/get.test.js
 const request = require('supertest');
 const app = require('../../src/app');
-require('dotenv').config();
 const { readFragment } = require('../../src/model/data');
 
 describe('POST /v1/fragments', () => {
@@ -40,9 +39,9 @@ describe('POST /v1/fragments', () => {
       .send('this is fragment 2')
       .set('Content-type', 'text/plain')
       .auth('user2@email.com', 'password2');
-    const fragment = await readFragment(res.body.fragment.ownerId, res.body.fragment.id);
-    expect(res.body.fragment).toEqual(fragment);
-    console.log(res.header);
+    const fragment = await readFragment(res.body.fragments.ownerId, res.body.fragments.id);
+    expect(res.body.fragments).toEqual(fragment);
+    console.log(res.body.fragments);
   });
 
   // TODO: we'll need to add tests to check the contents of the fragments array later

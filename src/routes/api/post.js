@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 
     await fragment.save();
     res.location(`${api}/${fragment.id}`);
-    res.status(201).json(createSuccessResponse({ fragment }));
+    res.status(201).json(createSuccessResponse({ fragments: fragment }));
   } else {
     res.status(415).json(createErrorResponse(415, 'not supported type'));
   }
