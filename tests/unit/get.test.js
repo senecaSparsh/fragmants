@@ -1,8 +1,6 @@
 // tests/unit/get.test.js
 const { Fragment } = require('../../src/model/fragment');
 const request = require('supertest');
-
-const { readFragmentData } = require('../../src/model/data');
 const app = require('../../src/app');
 
 describe('GET /v1/fragments', () => {
@@ -43,18 +41,19 @@ describe('GET /v1/fragments', () => {
 
   test('get request by id', async () => {
     const data = Buffer.from('hello');
-    const fragment = new Fragment({ ownerId: 'user2@email.com', type: 'text/plain', size: 0 });
+    const fragment = new Fragment({
+      ownerId: 'b0194b2e11548b547ddaff0e105b22347f94b625a7b964d7db72e1658c461a7f',
+      type: 'text/plain',
+      size: 0,
+    });
     await fragment.save();
     await fragment.setData(data);
 
-    const frag = await readFragmentData('user2@email.com', fragment.id);
-    console.log(frag.toString());
     const res = await request(app)
       .get('/v1/fragments/' + fragment.id)
       .auth('user2@email.com', 'password2');
     expect(res.statusCode).toBe(200);
     expect(res.body.status).toBe('ok');
-    console.log(res.body);
     expect(res.body.fragments).toBe('hello');
   });
 });

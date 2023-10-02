@@ -19,10 +19,12 @@ module.exports = async (req, res) => {
         fragment = await readFragmentData(req.user, req.params.id);
         res.status(200).json(createSuccessResponse({ fragments: fragment.toString() }));
       } else {
+        res.location(`${api}/${req.user.id}`);
         fragment = await Fragment.byUser(req.user, req.query.expand);
         res.status(200).json(createSuccessResponse({ fragments: fragment }));
       }
     } else {
+      res.location(`${api}/${req.user.id}`);
       fragment = await Fragment.byUser(req.user);
       res.status(200).json(createSuccessResponse({ fragment }));
     }
