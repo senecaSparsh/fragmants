@@ -11,8 +11,10 @@ module.exports = async (req, res) => {
     fragment = new Fragment({ ownerId: req.user, type: 'text/plain', size: req.body.length });
 
     await fragment.save();
+    await fragment.setData(req.body);
+
     res.location(`${api}/${fragment.id}`);
-    res.status(201).json(createSuccessResponse({ fragments: fragment }));
+    res.status(201).json(createSuccessResponse({ fragment }));
   } else {
     res.status(415).json(createErrorResponse(415, 'not supported type'));
   }
