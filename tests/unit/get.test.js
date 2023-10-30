@@ -73,6 +73,6 @@ describe('GET /v1/fragments', () => {
       .get('/v1/fragments/' + id + '/info')
       .auth('user2@email.com', 'password2');
     console.log(res.body);
-    expect(res.body.fragments).toEqual(fragment.toString());
+    expect(res.body.fragments).toBe(fragment.toString());
   });
 });
