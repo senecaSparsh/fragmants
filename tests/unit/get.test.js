@@ -2,7 +2,7 @@
 const hash = require('../../src/hash');
 const request = require('supertest');
 const app = require('../../src/app');
-const { readFragmentData } = require('../../src/model/data');
+const { readFragmentData, readFragment } = require('../../src/model/data');
 
 describe('GET /v1/fragments', () => {
   // If the request is missing the Authorization header, it should be forbidden
@@ -54,7 +54,25 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .get('/v1/fragments/' + id)
       .auth('user2@email.com', 'password2');
-    console.log(res.body);
+    console.log(res.body.fragments);
     expect(res.body.fragments).toBe(fragment.toString());
+  });
+
+  test('id info', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user2@email.com', 'password2')
+      .send('This is fragment 1')
+      .set('Content-type', 'text/plain');
+
+    const fragment = await readFragment(hash('user2@email.com'), req.body.fragment.id);
+
+    const id = req.body.fragment.id;
+
+    const res = await request(app)
+      .get('/v1/fragments/' + id + '/info')
+      .auth('user2@email.com', 'password2');
+    console.log(res.body);
+    expect(res.body.fragments).toEqual(fragment);
   });
 });
