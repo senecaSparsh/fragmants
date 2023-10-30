@@ -72,7 +72,10 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .get('/v1/fragments/' + id + '/info')
       .auth('user2@email.com', 'password2');
-    console.log(res.body);
-    expect(res.body.fragments).toBe(fragment.toString());
+
+    console.log('res.body:', res.body);
+    console.log('fragment:', fragment);
+
+    expect(res.body.fragment).toEqual(fragment);
   });
 });
