@@ -75,7 +75,6 @@ describe('GET /v1/fragments', () => {
 
     console.log('res.body:', res.body);
     console.log('fragment:', fragment);
-
     expect(res.body.fragment).toEqual(fragment);
   });
 });
