@@ -38,7 +38,7 @@ FROM node:20.9.0-alpine3.17 AS production
 
 # install curl
 WORKDIR /
-RUN apk --no-cache add curl=8.2.1 && apk --no-cache add dumb-init=1.2.5-r1
+RUN apk update && apk add --no-cache dumb-init=~1.2.5 curl=~7.79.1
 COPY --chown=node:node --from=dependencies \
  /app/node_modules/ /app/ \   
 /app/src/ /app/  \
