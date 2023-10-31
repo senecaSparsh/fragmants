@@ -54,8 +54,7 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .get('/v1/fragments/' + id)
       .auth('user2@email.com', 'password2');
-    console.log(res.body.fragments);
-    expect(res.body.fragments).toBe(fragment.toString());
+    expect(res.text).toBe(fragment.toString());
   });
 
   test('id info', async () => {
@@ -72,9 +71,6 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .get('/v1/fragments/' + id + '/info')
       .auth('user2@email.com', 'password2');
-
-    console.log('res.body:', res.body);
-    console.log('fragment:', fragment);
     expect(res.body.fragment).toEqual(fragment);
   });
 });
