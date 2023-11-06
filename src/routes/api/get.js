@@ -1,8 +1,11 @@
 // src/routes/api/get.js
 const { createSuccessResponse, createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model/fragment');
-const { readFragmentData } = require('../../model/data');
+const { readFragmentData, readFragment } = require('../../model/data');
+const logger = require('../../logger');
 require('dotenv').config();
+var MarkdownIt = require('markdown-it'),
+  md = new MarkdownIt();
 /**
  * Get a list of fragments for the current user
  */
@@ -12,30 +15,43 @@ module.exports = {
     if (req.user) {
       if (req.query) {
         if (req.params.id) {
-          fragment = await readFragmentData(req.user, req.params.id);
-          let fragments = fragment.toString();
-          res.status(200).send(fragments);
-          console.log(fragments);
+          let fragmentId = req.params.id.toString().split('.');
+          if (fragmentId.length > 1) {
+            let ext = fragmentId[1];
+            if (ext == 'html') {
+              fragment = await readFragmentData(req.user, fragmentId[0]);
+              res.set('Content-Type', 'text/html');
+              var result = md.render(fragment.toString());
+              res.status(200).send(result);
+              logger.info({ targetType: ext }, `successfully convert to ${ext}`);
+            }
+          } else {
+            fragment = await readFragmentData(req.user, fragmentId[0]);
+            let fragmentM = await readFragment(req.user, fragmentId[0]);
+            res.set('Content-Type', fragmentM.type);
+            res.status(200).send(fragment);
+            logger.info(
+              { fragmentData: fragment, contentType: fragmentM.type },
+              `successfully get fragment data`
+            );
+          }
         } else {
           fragment = await Fragment.byUser(req.user, req.query.expand);
           res.status(200).json(createSuccessResponse({ fragments: fragment }));
+          logger.info({ fragmentList: fragment }, `successfully get fragment list`);
         }
-      } else {
-        fragment = await Fragment.byUser(req.user);
-        res.status(200).json(createSuccessResponse({ fragment }));
       }
     } else {
-      res.status(404).json(createErrorResponse(404, 'something went wrong'));
+      res.status(401).json(createErrorResponse(401, 'unauthorized user'));
     }
   },
   info: async (req, res) => {
     if (req.query) {
       if (req.params.id) {
-        fragment = await Fragment.byId(req.user, req.params.id);
-        res.status(200).json(createSuccessResponse({ fragment }));
+        fragment = await readFragment(req.user, req.params.id);
+        res.status(200).json(fragment);
+        logger.info({ fragmentInfo: fragment }, `successfully get fragment meta data`);
       }
-    } else {
-      res.status(404).json(createErrorResponse(404, 'something went wrong'));
     }
   },
 };
