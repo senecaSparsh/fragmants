@@ -92,7 +92,13 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .get('/v1/fragments/' + id + '/info')
       .auth('user2@email.com', 'password2');
+
+    const res1 = await request(app)
+      .get('/v1/fragments/' + id + '333/info')
+      .auth('user2@email.com', 'password2');
+
     expect(res.body).toEqual(fragment);
+    expect(res1.statusCode).toBe(404);
   });
 
   test('convert', async () => {
@@ -108,5 +114,34 @@ describe('GET /v1/fragments', () => {
       .get('/v1/fragments/' + id + '.html')
       .auth('user1@email.com', 'password1');
     expect(res.text).toEqual('<h1>This is a markdown</h1>\n');
+  });
+
+  test('unsupported conversion', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .send('# This is a text')
+      .set('Content-type', 'text/plain');
+
+    const id = req.body.fragment.id;
+
+    const res = await request(app)
+      .get('/v1/fragments/' + id + '.html')
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(415);
+  });
+
+  test('fail get by id', async () => {
+    const req = await request(app)
+      .post('/v1/fragments/')
+      .auth('user1@email.com', 'password1')
+      .send('# This is a text')
+      .set('Content-type', 'text/plain');
+    const id = req.body.fragment.id;
+
+    const res = await request(app)
+      .get('/v1/fragments/' + id + 'html')
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(404);
   });
 });

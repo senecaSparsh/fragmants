@@ -14,12 +14,15 @@ module.exports = async (req, res) => {
       type: req.get('content-type'),
       size: req.body.length,
     });
-    await fragment.save();
-    await fragment.setData(req.body);
-
-    res.location(`${api}/v1/fragments/${fragment.id}`);
-    res.status(201).json(createSuccessResponse({ fragment }));
-    logger.info({ fragment: fragment }, `successfully posted fragment `);
+    try {
+      await fragment.save();
+      await fragment.setData(req.body);
+      res.location(`${api}/v1/fragments/${fragment.id}`);
+      res.status(201).json(createSuccessResponse({ fragment }));
+      logger.info({ fragment: fragment }, `successfully posted fragment `);
+    } catch (err) {
+      res.status(415).json(415, 'unable to post fragment');
+    }
   } else {
     res.status(415).json(createErrorResponse(415, 'not supported type'));
     logger.info(`posting fragment was unsuccessful`);
