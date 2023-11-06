@@ -57,3 +57,38 @@ npx cross-env LOG_LEVEL=info npm run dev
 
 Debugging:
 When using the debug script, you can attach a debugger (e.g., VSCode) to inspect and debug your code. Follow your debugger's documentation for details on how to do this.
+
+## To Run`
+
+`npm i`- installs necessary dependencies for running locally
+
+`npm start` - to start running the server at `node src/index.js`
+
+`npm run lint `- runs check on coding style and problems
+
+When the server started successfully on `localhost:8080` with an health check and the logger message should show that `Server started` and `Cognito JWKS cached`.
+
+# To Test
+
+`npm run dev ` - run the server in development mode
+
+`npm run debug ` - runs the server in debug mode
+
+`nodemon` is configured and will keep monitorning for code changes and restarting the server.
+
+# dependency setups & formatter
+
+`prettier` setup in `.prettierrc`
+
+`eslint` setup in `.eslintrc.js` run `npm run lint` to detect formatting issues.
+
+`Hadolint` used for this project to format the Dockerfile.
+Run `Hadolint Dockerfile` to format the Dockerfile.
+
+# Docker image
+
+This project is dockerized, image resides in Dockerhub: [sagarwal9/fragmants](https://hub.docker.com/repository/docker/sagarwal9/fragmants/general)
+
+OR simply run
+
+`docker pull sagarwal9/fragmants:latest`
