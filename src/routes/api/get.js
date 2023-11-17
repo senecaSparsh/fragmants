@@ -22,7 +22,7 @@ module.exports = {
               let ext = fragmentId[1];
               if (ext == 'html') {
                 if (fragmentM.type == 'text/markdown') {
-                  res.set('Content-Type', 'text/html');
+                  res.setHeader('Content-Type', 'text/html');
                   var result = md.render(fragment.toString());
                   res.status(200).send(result);
                   logger.info({ targetType: ext }, `successfully convert to ${ext}`);
@@ -33,7 +33,7 @@ module.exports = {
                 }
               }
             } else {
-              res.set('Content-Type', fragmentM.type);
+              res.setHeader('Content-Type', fragmentM.type);
               res.status(200).send(fragment);
               logger.info(
                 { fragmentData: fragment, contentType: fragmentM.type },
