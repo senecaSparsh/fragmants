@@ -43,5 +43,15 @@ describe('POST /v1/fragments', () => {
     expect(res.body.fragment).toEqual(fragment);
   });
 
+  test('post text/plain; charset=utf-8', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .send('this is fragment 2')
+      .set('Content-type', 'text/plain; charset=utf-8')
+      .auth('user1@email.com', 'password1');
+    const fragment = await readFragment(res.body.fragment.ownerId, res.body.fragment.id);
+    expect(res.body.fragment).toEqual(fragment);
+    expect(res.statusCode).toBe(201);
+  });
   // TODO: we'll need to add tests to check the contents of the fragments array later
 });
