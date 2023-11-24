@@ -144,4 +144,12 @@ describe('GET /v1/fragments', () => {
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(404);
   });
+
+  test('invalid id for get request', async () => {
+    const res = await request(app)
+      .get('/v1/fragments/invalidId')
+      .auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(404);
+    expect(res.body.error.message).toBe('id does not represent a known fragment');
+  });
 });
