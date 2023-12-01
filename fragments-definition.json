@@ -1,5 +1,5 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:888493928239:task-definition/fragment-task:3",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:888493928239:task-definition/fragment-task:4",
   "containerDefinitions": [
     {
       "name": "fragments",
@@ -34,7 +34,7 @@
         },
         {
           "name": "LOG_LEVEL",
-          "value": "${LOG_LEVEL:-info}"
+          "value": "info"
         },
         {
           "name": "HTPASSWD_FILE",
@@ -61,7 +61,7 @@
   "taskRoleArn": "arn:aws:iam::888493928239:role/LabRole",
   "executionRoleArn": "arn:aws:iam::888493928239:role/LabRole",
   "networkMode": "awsvpc",
-  "revision": 3,
+  "revision": 4,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -96,7 +96,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-12-01T21:09:26.300Z",
+  "registeredAt": "2023-12-01T21:36:34.375Z",
   "registeredBy": "arn:aws:sts::888493928239:assumed-role/voclabs/user2767463=Agarwal,_Sparsh",
   "tags": []
 }
