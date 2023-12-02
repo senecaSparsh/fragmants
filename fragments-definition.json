@@ -1,5 +1,5 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:888493928239:task-definition/fragment-task:4",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:888493928239:task-definition/fragment-task:2",
   "containerDefinitions": [
     {
       "name": "fragments",
@@ -61,7 +61,7 @@
   "taskRoleArn": "arn:aws:iam::888493928239:role/LabRole",
   "executionRoleArn": "arn:aws:iam::888493928239:role/LabRole",
   "networkMode": "awsvpc",
-  "revision": 4,
+  "revision": 2,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -73,9 +73,6 @@
     },
     {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
-    },
-    {
-      "name": "com.amazonaws.ecs.capability.task-iam-role"
     },
     {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
@@ -96,7 +93,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-12-01T21:36:34.375Z",
+  "registeredAt": "2023-12-01T20:54:13.757Z",
   "registeredBy": "arn:aws:sts::888493928239:assumed-role/voclabs/user2767463=Agarwal,_Sparsh",
   "tags": []
 }
