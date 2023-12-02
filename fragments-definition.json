@@ -1,9 +1,9 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:us-east-1:888493928239:task-definition/fragment-task:2",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:888493928239:task-definition/fragment-task:9",
   "containerDefinitions": [
     {
       "name": "fragments",
-      "image": "sagarwal9/fragmants:latest",
+      "image": "888493928239.dkr.ecr.us-east-1.amazonaws.com/fragments:v0.9.4",
       "cpu": 0,
       "portMappings": [
         {
@@ -17,10 +17,6 @@
       "essential": true,
       "environment": [
         {
-          "name": "AWS_S3_ENDPOINT_URL",
-          "value": "http://localhost:4566"
-        },
-        {
           "name": "AWS_COGNITO_POOL_ID",
           "value": "us-east-1_Krb22vJgC"
         },
@@ -29,22 +25,28 @@
           "value": "8080"
         },
         {
+          "name": "HTPASSWD_FILE",
+          "value": "tests/.htpasswd"
+        },
+        {
+          "name": "AWS_S3_ENDPOINT_URL",
+          "value": "http://localhost:4566"
+        },
+        {
+          "name": "NODE_ENV",
+          "value": "production"
+        },
+        {
           "name": "AWS_COGNITO_CLIENT_ID",
           "value": "5io5fmv65v70605ui3d0d973c6"
         },
         {
           "name": "LOG_LEVEL",
           "value": "info"
-        },
-        {
-          "name": "HTPASSWD_FILE",
-          "value": "tests/.htpasswd"
         }
       ],
-      "environmentFiles": [],
       "mountPoints": [],
       "volumesFrom": [],
-      "ulimits": [],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
@@ -58,10 +60,9 @@
     }
   ],
   "family": "fragment-task",
-  "taskRoleArn": "arn:aws:iam::888493928239:role/LabRole",
   "executionRoleArn": "arn:aws:iam::888493928239:role/LabRole",
   "networkMode": "awsvpc",
-  "revision": 2,
+  "revision": 9,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -72,7 +73,13 @@
       "name": "ecs.capability.execution-role-awslogs"
     },
     {
+      "name": "com.amazonaws.ecs.capability.ecr-auth"
+    },
+    {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "ecs.capability.execution-role-ecr-pull"
     },
     {
       "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
@@ -93,7 +100,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-12-01T20:54:13.757Z",
+  "registeredAt": "2023-12-02T20:11:33.684Z",
   "registeredBy": "arn:aws:sts::888493928239:assumed-role/voclabs/user2767463=Agarwal,_Sparsh",
   "tags": []
 }
