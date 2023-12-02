@@ -82,6 +82,9 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPO: fragments
           VERSION_TAG: ${{ github.ref_name }}
+          AWS_COGNITO_POOL_ID: ${{ secrets.AWS_COGNITO_POOL_ID }}
+          AWS_COGNITO_CLIENT_ID: ${{ secrets.AWS_COGNITO_CLIENT_ID }}
+          API_URL: ${{ secrets.API_URL }}
         with:
           task-definition: fragments-definition.json
           container-name: fragments
@@ -93,9 +96,9 @@ jobs:
           environment-variables: |
             LOG_LEVEL=info
             NODE_ENV=production
-            AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
+            AWS_COGNITO_POOL_ID=${{ env.AWS_COGNITO_POOL_ID }}
+            AWS_COGNITO_CLIENT_ID=${{ env.AWS_COGNITO_CLIENT_ID }}
+            API_URL=${{ env.API_URL }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
