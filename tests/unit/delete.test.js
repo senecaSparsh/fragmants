@@ -24,6 +24,6 @@ describe('Delete /v1/fragments', () => {
       .delete('/v1/fragments/invalidId')
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(404);
-    expect(res.body).toBe('fragment with that id is not found');
+    expect(res.body.error.message).toBe('fragment with that id is not found');
   });
 });

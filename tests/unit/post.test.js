@@ -1,6 +1,7 @@
 // tests/unit/get.test.js
 const request = require('supertest');
 const app = require('../../src/app');
+
 const { readFragment } = require('../../src/model/data');
 
 describe('POST /v1/fragments', () => {
@@ -26,7 +27,7 @@ describe('POST /v1/fragments', () => {
     const res = await request(app)
       .post('/v1/fragments')
       .send('this is fragment 1')
-      .set('Content-type', 'img/png')
+      .set('Content-type', 'application/javascript')
       .auth('user1@email.com', 'password1');
     expect(res.statusCode).toBe(415);
     expect(res.body.status).toBe('error');
@@ -53,5 +54,4 @@ describe('POST /v1/fragments', () => {
     expect(res.body.fragment).toEqual(fragment);
     expect(res.statusCode).toBe(201);
   });
-  // TODO: we'll need to add tests to check the contents of the fragments array later
 });

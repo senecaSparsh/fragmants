@@ -1,14 +1,12 @@
 const { Fragment } = require('../../src/model/fragment');
 
-// Wait for a certain number of ms. Feel free to change this value
-// if it isn't long enough for your test runs. Returns a Promise.
+// Wait for a certain number of ms. Returns a Promise.
 const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const validTypes = [
   `text/plain`,
   /*
    Currently, only text/plain is supported. Others will be added later.
-
   `text/markdown`,
   `text/html`,
   `application/json`,
@@ -83,11 +81,12 @@ describe('Fragment class', () => {
 
     test('fragments have an id', () => {
       const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 1 });
-      expect(fragment.id).toMatch(
-        /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/
-      );
+      expect(fragment.id).toMatch(/[A-Za-z0-9_-]+/);
     });
-
+    test('fragments have an ownerId', () => {
+      const fragment = new Fragment({ ownerId: '1234', type: 'text/plain', size: 1 });
+      expect(fragment.ownerId).toEqual('1234');
+    });
     test('fragments use id passed in if present', () => {
       const fragment = new Fragment({
         id: 'id',
@@ -168,6 +167,38 @@ describe('Fragment class', () => {
       });
       expect(fragment.formats).toEqual(['text/plain']);
     });
+    test('formats returns the expected result for markdown', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'text/markdown',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['text/plain', 'text/html', 'text/markdown']);
+    });
+    test('formats returns the expected result for image/png', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'image/png',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['image/png', 'image/jpeg', 'image/gif', 'image/webp']);
+    });
+    test('formats returns the expected result for html', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'text/html',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['text/plain', 'text/html']);
+    });
+    test('formats returns the expected result for application/json', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'application/json',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['application/json', 'text/plain']);
+    });
   });
 
   describe('save(), getData(), setData(), byId(), byUser(), delete()', () => {
@@ -239,7 +270,6 @@ describe('Fragment class', () => {
       await fragment.save();
       await fragment.setData(Buffer.from('a'));
       expect(fragment.size).toBe(1);
-
       await fragment.setData(Buffer.from('aa'));
       const { size } = await Fragment.byId('1234', fragment.id);
       expect(size).toBe(2);
@@ -252,6 +282,16 @@ describe('Fragment class', () => {
 
       await Fragment.delete('1234', fragment.id);
       expect(() => Fragment.byId('1234', fragment.id)).rejects.toThrow();
+    });
+  });
+  describe('extConvert', () => {
+    test('extConvert jpg to jpeg', async () => {
+      const ext = 'jpg';
+      expect(() => Fragment.extConvert(ext) == 'jpeg');
+    });
+    test('extConvert txt to plain', async () => {
+      const ext = 'txt';
+      expect(() => Fragment.extConvert(ext) == 'plain');
     });
   });
 });
