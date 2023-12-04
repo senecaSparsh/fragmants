@@ -35,6 +35,10 @@
         {
           "name": "HTPASSWD_FILE",
           "value": "tests/.htpasswd"
+        },
+        {
+          "name": "AWS_DYNAMODB_TABLE_NAME",
+          "value": "fragments"
         }
       ],
       "environmentFiles": [],
