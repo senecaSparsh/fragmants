@@ -23,22 +23,4 @@ describe('GET /v1/fragments/:id', () => {
     expect(updateRes.statusCode).toBe(200);
     expect(updateRes.body.status).toBe('ok');
   });
-
-  // // test to check the 400 error for invalid fragment type
-  // test('authenticated users can not update a fragment with invalid type', async () => {
-  //     const data = Buffer.from('This is fragment');
-  //     const postRes = await request(app)
-  //         .post('/v1/fragments')
-  //         .auth('user1@email.com', 'password1')
-  //         .set('Content-Type', 'text/plain')
-  //         .send(data);
-  //     const id = postRes.headers.location.split('/').pop();
-  //     const updateRes = await request(app)
-  //         .put(`/v1/fragments/${id}`)
-  //         .auth('user1@email.com', 'password1')
-  //         .set('Content-Type', 'text/markdown')
-  //         .send(data);
-  //     expect(updateRes.statusCode).toBe(400);
-  //     expect(updateRes.body.status).toBe('error');
-  // });
 });
