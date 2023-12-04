@@ -28,7 +28,14 @@ describe('GET /v1/fragments/:id/info', () => {
       .set('Authorization', `Bearer ${authToken}`)
       .send(data);
 
-    const id = postRes.headers.location.split('/').pop();
+    // Check if location header is present before attempting to split
+    const id = postRes.headers.location ? postRes.headers.location.split('/').pop() : null;
+
+    if (!id) {
+      // Handle the case where id is not defined
+      throw new Error('Fragment ID not found in response headers');
+    }
+
     const getRes = await request(app)
       .get(`/v1/fragments/${id}/info`)
       .set('Authorization', `Bearer ${authToken}`);
