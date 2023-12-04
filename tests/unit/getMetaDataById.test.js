@@ -1,23 +1,38 @@
 const request = require('supertest');
 const app = require('../../src/app');
+
 describe('GET /v1/fragments/:id/info', () => {
+  let authToken;
+
+  beforeAll(async () => {
+    // Log in and get the authentication token
+    const loginRes = await request(app).post('/v1/login').send({
+      email: 'user1@email.com',
+      password: 'password1',
+    });
+    authToken = loginRes.body.token;
+  });
+
   // If the request is missing the Authorization header, it should be forbidden
   test('unauthenticated requests are denied', async () => {
     const response = await request(app).get('/v1/fragments/:id/info').set('Authorization', '');
     expect(response.statusCode).toBe(401);
   });
+
   // Correct credentials should give a success result with metadata about the fragment with the given id
   test('authenticated users get metadata about the fragment with the given id', async () => {
     const data = Buffer.from('This is fragment');
     const postRes = await request(app)
       .post('/v1/fragments')
       .set('Content-Type', 'text/plain')
-      .auth('user1@email.com', 'password1')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(data);
+
     const id = postRes.headers.location.split('/').pop();
     const getRes = await request(app)
       .get(`/v1/fragments/${id}/info`)
-      .auth('user1@email.com', 'password1');
+      .set('Authorization', `Bearer ${authToken}`);
+
     expect(getRes.statusCode).toBe(200);
     expect(getRes.body).toMatchObject({
       status: 'ok',
@@ -31,11 +46,13 @@ describe('GET /v1/fragments/:id/info', () => {
       },
     });
   });
+
   // Invalid id should return 404
   test('invalid id returns 404', async () => {
     const res = await request(app)
       .get('/v1/fragments/invalid_id/info')
-      .auth('user1@email.com', 'password1');
+      .set('Authorization', `Bearer ${authToken}`);
+
     expect(res.statusCode).toBe(404);
   });
 });

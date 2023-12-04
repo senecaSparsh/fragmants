@@ -1,44 +1,43 @@
 const request = require('supertest');
 const app = require('../../src/app');
-describe('GET /v1/fragments/:id', () => {
-  test('Request with non unauthetication are denied', () =>
-    request(app).get('/v1/fragments').expect(401));
-  test('Credentials with incorrect information are denied', () =>
-    request(app).get('/v1/fragments').auth('invalid@email.com', 'incorrect_passowrd').expect(401));
+describe('POST /v1/fragments', () => {
+  test('request not found', () => request(app).post('/v1/fragments').expect(401));
 
-  // test to update a fragment with valid user and password
-  test('authenticated users can update a fragment', async () => {
-    const data = Buffer.from('This is fragment');
-    const postRes = await request(app)
-      .post('/v1/fragments')
-      .auth('user1@email.com', 'password1')
-      .set('Content-Type', 'text/plain')
-      .send(data);
-    const id = postRes.headers.location.split('/').pop();
-    const updateRes = await request(app)
-      .put(`/v1/fragments/${id}`)
-      .auth('user1@email.com', 'password1')
-      .set('Content-Type', 'text/plain')
-      .send(data);
-    expect(updateRes.statusCode).toBe(200);
-    expect(updateRes.body.status).toBe('ok');
+  test('incorrect credentials are denied', () =>
+    request(app).post('/v1/fragments').auth('invalid@gmail.com', 'incorrect_password').expect(401));
+
+  test('authenticated user get fragments array', async () => {
+    const res = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.status).toBe('ok');
+    expect(Array.isArray(res.body.fragments)).toBe(true);
   });
 
-  // // test to check the 400 error for invalid fragment type
-  // test('authenticated users can not update a fragment with invalid type', async () => {
-  //     const data = Buffer.from('This is fragment');
-  //     const postRes = await request(app)
-  //         .post('/v1/fragments')
-  //         .auth('user1@email.com', 'password1')
-  //         .set('Content-Type', 'text/plain')
-  //         .send(data);
-  //     const id = postRes.headers.location.split('/').pop();
-  //     const updateRes = await request(app)
-  //         .put(`/v1/fragments/${id}`)
-  //         .auth('user1@email.com', 'password1')
-  //         .set('Content-Type', 'text/markdown')
-  //         .send(data);
-  //     expect(updateRes.statusCode).toBe(400);
-  //     expect(updateRes.body.status).toBe('error');
-  // });
+  test('unsupported type leads to failure', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('content-type', 'application/pdf');
+    expect(res.statusCode).toBe(415);
+  });
+
+  test('fragment without data does not work', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .send();
+    expect(res.statusCode).toBe(500);
+  });
+
+  test('fragment with data work', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('content-type', 'text/plain')
+      .send('Vishnu Das Puthukudi');
+
+    var data = JSON.parse(res.text);
+    expect(data.fragment.type).toBe('text/plain');
+    expect(res.statusCode).toBe(201);
+  });
 });
