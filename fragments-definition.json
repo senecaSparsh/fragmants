@@ -4,7 +4,7 @@
     {
       "name": "fragments",
       "image": "sagarwal9/fragmants:latest",
-      "cpu": 0,
+      "cpu": 256,
       "portMappings": [
         {
           "name": "fragments-8080-tcp",
