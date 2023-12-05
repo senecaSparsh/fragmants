@@ -17,10 +17,6 @@
       "essential": true,
       "environment": [
         {
-          "name": "AWS_S3_ENDPOINT_URL",
-          "value": "http://localhost:4566"
-        },
-        {
           "name": "AWS_S3_BUCKET_NAME",
           "value": "sagarwal9-fragments"
         },
